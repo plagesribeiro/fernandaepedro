@@ -1,0 +1,4 @@
+name = "fernandaepedro-wedding"
+pages_build_output_dir = ".svelte-kit/cloudflare"
+compatibility_date = "2026-01-08"
+compatibility_flags = ["nodejs_compat"]

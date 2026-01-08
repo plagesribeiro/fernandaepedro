@@ -1,0 +1,51 @@
+@import 'tailwindcss';
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Great+Vibes&family=Lato:wght@300;400;700&display=swap');
+
+:root {
+	--transition-elegant: cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-duration: 0.6s;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	font-family: 'Lato', sans-serif;
+	background-color: #fffff0;
+	color: #2c2c2c;
+	overflow-x: hidden;
+}
+
+.parallax-section {
+	will-change: transform;
+}
+
+.animate-on-scroll {
+	opacity: 0;
+	transform: translateY(30px);
+	transition:
+		opacity var(--transition-duration) var(--transition-elegant),
+		transform var(--transition-duration) var(--transition-elegant);
+}
+
+.animate-on-scroll.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.text-elegant-shadow {
+	text-shadow: 2px 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.text-gold-gradient {
+	background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
