@@ -6,3 +6,11 @@ compatibility_flags = ["nodejs_compat", "nodejs_als"]
 [assets]
 binding = "ASSETS"
 directory = ".svelte-kit/cloudflare"
+
+[[routes]]
+pattern = "fernandaepedro.com"
+custom_domain = true
+
+[[routes]]
+pattern = "www.fernandaepedro.com"
+custom_domain = true
