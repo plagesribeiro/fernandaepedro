@@ -9,8 +9,10 @@
 			class="w-32 h-px bg-gradient-to-r from-transparent via-wedding-gold to-transparent mx-auto mb-6"
 		></div>
 
-		<p class="font-heading text-wedding-gold text-lg tracking-wider">Fernanda & Pedro</p>
+		<p class="font-heading text-wedding-gold text-lg tracking-wider">
+			Fernanda & Pedro
+		</p>
 
-		<p class="font-body text-sm text-gray-500">© {currentYear} - Feito com amor</p>
+		<p class="font-body text-sm text-gray-500">© {currentYear}</p>
 	</div>
 </footer>
