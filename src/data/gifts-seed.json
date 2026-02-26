@@ -1,0 +1,130 @@
+[
+  {
+    "name": "Jogo de Panelas Tramontina",
+    "description": "Jogo com 5 pecas antiaderente, ideal para o dia a dia",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 450.00,
+    "category": "Cozinha",
+    "totalQuantity": 1
+  },
+  {
+    "name": "Jogo de Toalhas",
+    "description": "Kit 8 pecas algodao egipcio, macias e absorventes",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 280.00,
+    "category": "Casa",
+    "totalQuantity": 2
+  },
+  {
+    "name": "Cafeteira Nespresso",
+    "description": "Cafeteira automatica com espumador de leite",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 650.00,
+    "category": "Eletronicos",
+    "totalQuantity": 1
+  },
+  {
+    "name": "Jogo de Cama King",
+    "description": "Conjunto completo 400 fios, percal egpcio",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 380.00,
+    "category": "Casa",
+    "totalQuantity": 2
+  },
+  {
+    "name": "Liquidificador Vitamix",
+    "description": "Liquidificador profissional alta potencia",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 520.00,
+    "category": "Cozinha",
+    "totalQuantity": 1
+  },
+  {
+    "name": "Smart TV 55\"",
+    "description": "Smart TV 4K HDR com sistema operacional integrado",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 2800.00,
+    "category": "Eletronicos",
+    "totalQuantity": 1
+  },
+  {
+    "name": "Jantar Romantico",
+    "description": "Experiencia gastronomica para dois em restaurante premiado",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 600.00,
+    "category": "Experiencias",
+    "totalQuantity": 3
+  },
+  {
+    "name": "Aspirador Robo",
+    "description": "Aspirador robo com mapeamento inteligente e app",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 1200.00,
+    "category": "Eletronicos",
+    "totalQuantity": 1
+  },
+  {
+    "name": "Kit Facas Chef",
+    "description": "Conjunto 6 facas profissionais em aco inox com cepo",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 350.00,
+    "category": "Cozinha",
+    "totalQuantity": 1
+  },
+  {
+    "name": "Spa Day para Dois",
+    "description": "Dia de spa completo com massagem, sauna e tratamentos",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 800.00,
+    "category": "Experiencias",
+    "totalQuantity": 2
+  },
+  {
+    "name": "Aparelho de Jantar 42 Pecas",
+    "description": "Porcelana fina com detalhes dourados, servico para 6",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 750.00,
+    "category": "Cozinha",
+    "totalQuantity": 1
+  },
+  {
+    "name": "Edredom Plumas",
+    "description": "Edredom king de plumas de ganso, ultra macio",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 480.00,
+    "category": "Casa",
+    "totalQuantity": 1
+  },
+  {
+    "name": "Viagem Lua de Mel",
+    "description": "Contribuicao para a viagem dos sonhos do casal",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 500.00,
+    "category": "Experiencias",
+    "totalQuantity": 10
+  },
+  {
+    "name": "Air Fryer",
+    "description": "Fritadeira eletrica digital 5.5L, sem oleo",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 420.00,
+    "category": "Cozinha",
+    "totalQuantity": 1
+  },
+  {
+    "name": "Cortina Blackout",
+    "description": "Par de cortinas blackout elegantes para sala",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 320.00,
+    "category": "Casa",
+    "totalQuantity": 2
+  },
+  {
+    "name": "Caixa de Som Bluetooth",
+    "description": "Caixa de som portatil premium com som 360 graus",
+    "imageUrl": "/images/gifts/placeholder.webp",
+    "price": 550.00,
+    "category": "Eletronicos",
+    "totalQuantity": 1
+  }
+]
