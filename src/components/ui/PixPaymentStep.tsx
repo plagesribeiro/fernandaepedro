@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle, Clock, ChevronDown } from "lucide-react";
 import { CopyButton } from "./CopyButton";
 import { formatCurrency } from "@/lib/utils";
 import type { PixStatusResponse } from "@/types";
@@ -57,6 +57,7 @@ export function PixPaymentStep({
   status,
   isPolling,
 }: PixPaymentStepProps) {
+  const [showCode, setShowCode] = useState(false);
   if (status === "approved") {
     return (
       <div className="text-center py-6">
@@ -126,24 +127,31 @@ export function PixPaymentStep({
               className="w-48 h-48"
             />
           </div>
-          <p className="text-xs text-warm-gray/70">
-            ou use o código abaixo
-          </p>
         </div>
       )}
 
-      <div className="space-y-3">
-        <p className="text-sm font-medium text-charcoal text-center">
-          PIX Copia e Cola
-        </p>
-        <div className="bg-champagne/50 border border-rose-gold/20 rounded-xl p-4">
-          <p className="text-xs text-warm-gray break-all font-mono leading-relaxed select-all">
-            {copiaECola}
-          </p>
-        </div>
-        <div className="flex justify-center">
-          <CopyButton text={copiaECola} />
-        </div>
+      <div className="flex justify-center">
+        <CopyButton text={copiaECola} />
+      </div>
+
+      <div>
+        <button
+          type="button"
+          onClick={() => setShowCode((v) => !v)}
+          className="flex items-center gap-1.5 mx-auto text-sm text-warm-gray hover:text-charcoal transition-colors"
+        >
+          <span>Ver código PIX Copia e Cola</span>
+          <ChevronDown
+            className={`w-4 h-4 transition-transform duration-200 ${showCode ? "rotate-180" : ""}`}
+          />
+        </button>
+        {showCode && (
+          <div className="mt-3 bg-champagne/50 border border-rose-gold/20 rounded-xl p-4">
+            <p className="text-xs text-warm-gray break-all font-mono leading-relaxed select-all">
+              {copiaECola}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="flex items-center justify-between">
@@ -157,7 +165,7 @@ export function PixPaymentStep({
       </div>
 
       <p className="text-xs text-center text-warm-gray/70">
-        Copie o código acima e cole no app do seu banco para pagar via PIX.
+        Escaneie o QR Code com o app do seu banco para pagar via PIX.
         A confirmação é automática.
       </p>
     </div>

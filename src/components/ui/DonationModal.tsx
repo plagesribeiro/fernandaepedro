@@ -190,9 +190,7 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
                     rows={3}
                     placeholder="Deixe uma mensagem carinhosa para os noivos..."
                     value={message}
-                    onChange={(e) =>
-                      setMessage((e.target as HTMLTextAreaElement).value)
-                    }
+                    onChange={(e) => setMessage(e.target.value)}
                   />
 
                   {error && (
