@@ -83,7 +83,6 @@ export function GiftRegistrySection() {
           g.id === selectedGift.id
             ? {
                 ...g,
-                reservedQuantity: g.reservedQuantity + 1,
                 availableQuantity: g.availableQuantity - 1,
               }
             : g
@@ -114,7 +113,7 @@ export function GiftRegistrySection() {
             <p className="text-warm-gray mt-4">Carregando presentes...</p>
           </div>
         ) : (
-          <div className="gifts-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="gifts-grid grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
             <AnimatePresence mode="popLayout">
               {(category === "Todos" || category === "Experiências") && (
                 <DonationCard

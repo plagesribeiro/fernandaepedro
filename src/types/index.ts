@@ -6,7 +6,6 @@ export interface Gift {
   price: number;
   category: string | null;
   totalQuantity: number;
-  reservedQuantity: number;
   availableQuantity: number;
   createdAt: Date | null;
 }
@@ -80,9 +79,3 @@ export interface PixStatusResponse {
   paidAt: string | null;
 }
 
-export interface DonationFormData {
-  donorName: string;
-  donorEmail: string;
-  amount: number;
-  message?: string;
-}

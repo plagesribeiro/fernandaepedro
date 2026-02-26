@@ -9,7 +9,6 @@ import { GiftRegistrySection } from "@/components/sections/GiftRegistrySection";
 import { GallerySection } from "@/components/sections/GallerySection";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { CursorSparkle } from "@/components/effects/CursorSparkle";
-import { SoundToggle } from "@/components/effects/SoundToggle";
 import { EasterEggs } from "@/components/effects/EasterEggs";
 
 export default function HomePage() {
@@ -17,7 +16,6 @@ export default function HomePage() {
     <>
       <Navigation />
       <CursorSparkle />
-      <SoundToggle />
       <EasterEggs />
 
       <main>

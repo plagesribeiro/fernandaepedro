@@ -17,7 +17,6 @@ export async function seed() {
       price: gift.price.toString(),
       category: gift.category,
       totalQuantity: gift.totalQuantity,
-      reservedQuantity: 0,
     });
     console.log(`  ✓ ${gift.name}`);
   }

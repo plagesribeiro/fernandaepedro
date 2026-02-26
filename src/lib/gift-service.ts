@@ -41,19 +41,6 @@ export async function cleanupExpiredPayments(): Promise<number> {
   return expired.length;
 }
 
-export async function createGiftReservation(
-  giftId: number,
-  name: string,
-  email: string,
-  pixPaymentId: number
-): Promise<void> {
-  const sql = getSql();
-  await sql`
-    INSERT INTO gift_reservations (gift_id, reserver_name, reserver_email, pix_payment_id)
-    VALUES (${giftId}, ${name}, ${email}, ${pixPaymentId})
-  `;
-}
-
 export async function getGiftPrice(
   giftId: number
 ): Promise<{ price: number; name: string } | null> {

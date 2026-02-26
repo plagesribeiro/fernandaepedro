@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { getPaymentClient } from "@/lib/mercadopago";
-import { createGiftReservation, isGiftAvailable } from "@/lib/gift-service";
+import { isGiftAvailable } from "@/lib/gift-service";
 
 export const dynamic = "force-dynamic";
 
@@ -119,20 +119,9 @@ async function handleApproved(
     const available = await isGiftAvailable(pix.gift_id as number);
     if (!available) {
       console.warn(
-        `Gift ${pix.gift_id} is already fully reserved but payment ${pixId} was approved. Creating reservation anyway — resolve manually.`
+        `Gift ${pix.gift_id} is already fully reserved but payment ${pixId} was approved. Resolve manually.`
       );
     }
-    await createGiftReservation(
-      pix.gift_id as number,
-      pix.reserver_name as string,
-      pix.reserver_email as string,
-      pixId
-    );
-  } else if (pix.type === "donation") {
-    await sql`
-      INSERT INTO donations (pix_payment_id, donor_name, donor_email, amount, message, paid_at)
-      VALUES (${pixId}, ${pix.reserver_name}, ${pix.reserver_email}, ${pix.amount}, ${pix.message}, ${paidAt})
-    `;
   }
 
   return NextResponse.json({
