@@ -2,11 +2,9 @@
 
 import { useEffect, useRef, useCallback } from "react";
 import { useEasterEgg } from "@/hooks/useEasterEgg";
-import { useSoundEffect } from "@/hooks/useSoundEffect";
 
 export function EasterEggs() {
   const { activated, reset } = useEasterEgg();
-  const { play } = useSoundEffect();
   const heartsRef = useRef<HTMLDivElement>(null);
 
   const spawnHeartRain = useCallback(() => {
@@ -36,10 +34,9 @@ export function EasterEggs() {
 
   useEffect(() => {
     if (activated) {
-      play("easter");
       spawnHeartRain();
     }
-  }, [activated, play, spawnHeartRain]);
+  }, [activated, spawnHeartRain]);
 
   // Console art
   useEffect(() => {

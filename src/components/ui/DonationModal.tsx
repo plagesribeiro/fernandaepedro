@@ -9,7 +9,6 @@ import { CurrencyInput } from "./CurrencyInput";
 import { PixPaymentStep } from "./PixPaymentStep";
 import { ConfettiOverlay } from "@/components/effects/ConfettiOverlay";
 import { usePixPolling } from "@/hooks/usePixPolling";
-import { useSoundEffect } from "@/hooks/useSoundEffect";
 import type { PixCreateResponse } from "@/types";
 
 interface DonationModalProps {
@@ -35,14 +34,12 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
   const [error, setError] = useState("");
   const [pixData, setPixData] = useState<PixCreateResponse | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
-  const { play } = useSoundEffect();
 
   const { status, isPolling } = usePixPolling({
     pixPaymentId: pixData?.pixPaymentId ?? null,
   });
 
   if (status === "approved" && step === "pix") {
-    play("success");
     setStep("success");
     setShowConfetti(true);
     setTimeout(() => {

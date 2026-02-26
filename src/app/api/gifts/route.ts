@@ -31,7 +31,6 @@ export async function GET() {
       price: Number(gift.price),
       category: gift.category,
       totalQuantity: gift.total_quantity,
-      reservedQuantity: gift.total_quantity - Number(gift.available_quantity),
       availableQuantity: Number(gift.available_quantity),
       createdAt: gift.created_at,
     }));

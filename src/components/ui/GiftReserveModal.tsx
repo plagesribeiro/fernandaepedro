@@ -8,7 +8,6 @@ import { FormField } from "./FormField";
 import { PixPaymentStep } from "./PixPaymentStep";
 import { ConfettiOverlay } from "@/components/effects/ConfettiOverlay";
 import { usePixPolling } from "@/hooks/usePixPolling";
-import { useSoundEffect } from "@/hooks/useSoundEffect";
 import { formatCurrency } from "@/lib/utils";
 import type { Gift as GiftType, PixCreateResponse } from "@/types";
 
@@ -38,7 +37,6 @@ export function GiftReserveModal({
   const [error, setError] = useState("");
   const [pixData, setPixData] = useState<PixCreateResponse | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
-  const { play } = useSoundEffect();
 
   const { status, isPolling } = usePixPolling({
     pixPaymentId: pixData?.pixPaymentId ?? null,
@@ -46,7 +44,6 @@ export function GiftReserveModal({
 
   // Transition to success when payment is approved
   if (status === "approved" && step === "pix") {
-    play("reserve");
     setStep("success");
     setShowConfetti(true);
     setTimeout(() => {

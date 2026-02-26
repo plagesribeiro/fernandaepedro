@@ -38,7 +38,6 @@ export const gifts = pgTable("gifts", {
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   category: varchar("category", { length: 100 }),
   totalQuantity: integer("total_quantity").notNull().default(1),
-  reservedQuantity: integer("reserved_quantity").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -59,24 +58,3 @@ export const pixPayments = pgTable("pix_payments", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const giftReservations = pgTable("gift_reservations", {
-  id: serial("id").primaryKey(),
-  giftId: integer("gift_id").references(() => gifts.id),
-  reserverName: varchar("reserver_name", { length: 255 }).notNull(),
-  reserverEmail: varchar("reserver_email", { length: 255 }).notNull(),
-  pixPaymentId: integer("pix_payment_id").references(() => pixPayments.id),
-  reservedAt: timestamp("reserved_at").defaultNow(),
-});
-
-export const donations = pgTable("donations", {
-  id: serial("id").primaryKey(),
-  pixPaymentId: integer("pix_payment_id")
-    .references(() => pixPayments.id)
-    .notNull(),
-  donorName: varchar("donor_name", { length: 255 }).notNull(),
-  donorEmail: varchar("donor_email", { length: 255 }).notNull(),
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
-  message: text("message"),
-  paidAt: timestamp("paid_at"),
-  createdAt: timestamp("created_at").defaultNow(),
-});

@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useSoundEffect } from "@/hooks/useSoundEffect";
 import type { ButtonHTMLAttributes } from "react";
 
 interface AnimatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -14,12 +13,8 @@ export function AnimatedButton({
   variant = "primary",
   size = "md",
   className,
-  onMouseEnter,
-  onClick,
   ...props
 }: AnimatedButtonProps) {
-  const { play } = useSoundEffect();
-
   return (
     <button
       className={cn(
@@ -38,14 +33,6 @@ export function AnimatedButton({
         },
         className
       )}
-      onMouseEnter={(e) => {
-        play("hover");
-        onMouseEnter?.(e);
-      }}
-      onClick={(e) => {
-        play("click");
-        onClick?.(e);
-      }}
       {...props}
     >
       <span className="relative z-10">{children}</span>

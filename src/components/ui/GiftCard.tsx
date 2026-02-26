@@ -25,7 +25,7 @@ function AvailabilityBadge({ available, total }: { available: number; total: num
       : `${available} de ${total} disponível${available > 1 ? "is" : ""}`;
 
   return (
-    <span className={cn("text-xs px-2 py-1 rounded-full font-medium", color)}>
+    <span className={cn("text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full font-medium", color)}>
       {label}
     </span>
   );
@@ -48,19 +48,19 @@ export function GiftCard({ gift, onReserve }: GiftCardProps) {
           : "border-gray-200 opacity-70"
       )}
     >
-      <div className="aspect-square bg-gradient-to-br from-blush to-champagne flex items-center justify-center relative overflow-hidden">
-        <GiftIcon className="w-16 h-16 text-rose-gold/30" />
+      <div className="aspect-[4/3] sm:aspect-square bg-gradient-to-br from-blush to-champagne flex items-center justify-center relative overflow-hidden">
+        <GiftIcon className="w-10 h-10 sm:w-16 sm:h-16 text-rose-gold/30" />
         {!isAvailable && (
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <span className="text-white font-serif text-lg rotate-[-15deg]">
+            <span className="text-white font-serif text-sm sm:text-lg rotate-[-15deg]">
               Reservado
             </span>
           </div>
         )}
       </div>
-      <div className="p-4 space-y-3">
+      <div className="p-2.5 sm:p-4 space-y-1.5 sm:space-y-3">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-serif text-lg text-charcoal leading-tight">
+          <h3 className="font-serif text-base sm:text-lg text-charcoal leading-tight">
             {gift.name}
           </h3>
           <AvailabilityBadge
@@ -69,12 +69,12 @@ export function GiftCard({ gift, onReserve }: GiftCardProps) {
           />
         </div>
         {gift.description && (
-          <p className="text-sm text-warm-gray line-clamp-2">
+          <p className="text-xs sm:text-sm text-warm-gray line-clamp-1 sm:line-clamp-2">
             {gift.description}
           </p>
         )}
-        <div className="flex items-center justify-between pt-2">
-          <span className="text-lg font-semibold text-rose-gold">
+        <div className="flex items-center justify-between pt-1 sm:pt-2">
+          <span className="text-base sm:text-lg font-semibold text-rose-gold">
             {formatCurrency(gift.price)}
           </span>
           <AnimatedButton

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SoundProvider } from "@/components/effects/SoundProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -41,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="scroll-smooth">
       <body className="bg-ivory text-charcoal font-sans antialiased">
-        <SoundProvider>{children}</SoundProvider>
+        {children}
       </body>
     </html>
   );

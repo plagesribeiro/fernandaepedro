@@ -12,14 +12,12 @@ import { FormField } from "@/components/ui/FormField";
 import { PhoneInput } from "@/components/ui/PhoneInput";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { ConfettiOverlay } from "@/components/effects/ConfettiOverlay";
-import { useSoundEffect } from "@/hooks/useSoundEffect";
 
 export function RsvpSection() {
   const [submitted, setSubmitted] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [serverError, setServerError] = useState("");
   const sectionRef = useRef<HTMLElement>(null);
-  const { play } = useSoundEffect();
 
   const {
     register,
@@ -94,7 +92,6 @@ export function RsvpSection() {
       const result = await res.json();
 
       if (result.success) {
-        play("success");
         setSubmitted(true);
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 5000);

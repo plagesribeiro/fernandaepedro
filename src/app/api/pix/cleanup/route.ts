@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { getPaymentClient } from "@/lib/mercadopago";
-import { createGiftReservation } from "@/lib/gift-service";
 
 export const dynamic = "force-dynamic";
 
@@ -43,19 +42,6 @@ export async function GET() {
           UPDATE pix_payments SET status = 'approved', paid_at = ${paidAt}
           WHERE id = ${pix.id}
         `;
-        if (pix.type === "gift" && pix.gift_id) {
-          await createGiftReservation(
-            pix.gift_id as number,
-            pix.reserver_name as string,
-            pix.reserver_email as string,
-            pix.id as number
-          );
-        } else if (pix.type === "donation") {
-          await sql`
-            INSERT INTO donations (pix_payment_id, donor_name, donor_email, amount, message, paid_at)
-            VALUES (${pix.id}, ${pix.reserver_name}, ${pix.reserver_email}, ${pix.amount}, ${pix.message}, ${paidAt})
-          `;
-        }
         approved++;
       } else {
         await sql`
