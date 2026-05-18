@@ -16,11 +16,11 @@ export function CategoryTabs({ active, onChange }: CategoryTabsProps) {
           key={category}
           onClick={() => onChange(category)}
           className={cn(
-            "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
-            "hover:scale-105 active:scale-95",
+            "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
+            "hover:scale-[1.02] active:scale-[0.98]",
             active === category
-              ? "bg-rose-gold text-white shadow-md"
-              : "bg-champagne text-warm-gray hover:bg-rose-gold/10 border border-rose-gold/20"
+              ? "bg-rose-gold text-white shadow-sm"
+              : "bg-champagne text-charcoal/70 hover:bg-rose-gold/10 hover:text-rose-gold border border-rose-gold/15"
           )}
         >
           {category}

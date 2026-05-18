@@ -37,10 +37,10 @@ export function CopyButton({ text, className }: CopyButtonProps) {
       type="button"
       onClick={handleCopy}
       className={cn(
-        "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+        "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
         copied
           ? "bg-sage/20 text-sage"
-          : "bg-rose-gold text-white hover:bg-rose-gold-dark hover:scale-105",
+          : "bg-rose-gold text-white hover:bg-rose-gold-dark hover:scale-[1.02]",
         className
       )}
     >

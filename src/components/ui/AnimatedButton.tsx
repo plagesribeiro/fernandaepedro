@@ -18,12 +18,12 @@ export function AnimatedButton({
   return (
     <button
       className={cn(
-        "relative overflow-hidden rounded-full font-sans font-medium transition-all duration-300",
-        "hover:scale-105 active:scale-95 hover:shadow-lg",
+        "relative overflow-hidden rounded-lg font-sans font-medium transition-all duration-300",
+        "hover:scale-[1.02] active:scale-[0.98] hover:shadow-md",
         {
           "bg-rose-gold text-white hover:bg-rose-gold-dark": variant === "primary",
-          "bg-champagne text-charcoal hover:bg-champagne/80": variant === "secondary",
-          "border-2 border-rose-gold text-rose-gold hover:bg-rose-gold hover:text-white":
+          "bg-champagne text-charcoal hover:bg-champagne/80 border border-rose-gold/15": variant === "secondary",
+          "border border-rose-gold text-rose-gold hover:bg-rose-gold hover:text-white":
             variant === "outline",
         },
         {

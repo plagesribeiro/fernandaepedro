@@ -15,17 +15,17 @@ function AvailabilityBadge({ available, total }: { available: number; total: num
   const ratio = available / total;
   const color =
     ratio === 0
-      ? "bg-red-900/30 text-red-400"
+      ? "bg-red-50 text-red-600 border border-red-200"
       : ratio <= 0.5
-        ? "bg-yellow-900/30 text-yellow-400"
-        : "bg-green-900/30 text-green-400";
+        ? "bg-amber-50 text-amber-700 border border-amber-200"
+        : "bg-emerald-50 text-emerald-700 border border-emerald-200";
   const label =
     ratio === 0
       ? "Esgotado"
       : `${available} de ${total} disponível${available > 1 ? "is" : ""}`;
 
   return (
-    <span className={cn("text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full font-medium", color)}>
+    <span className={cn("text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md font-medium", color)}>
       {label}
     </span>
   );

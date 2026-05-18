@@ -57,16 +57,16 @@
 }
 
 @theme inline {
-  --color-rose-gold: #D4762C;
-  --color-rose-gold-light: #E89A5A;
-  --color-rose-gold-dark: #A85A1E;
-  --color-blush: #171412;
-  --color-ivory: #111111;
-  --color-sage: #8B7355;
-  --color-sage-light: #A08B6D;
-  --color-champagne: #1F1B17;
-  --color-charcoal: #F0E6DA;
-  --color-warm-gray: #9A8E82;
+  --color-rose-gold: #B8623A;
+  --color-rose-gold-light: #D38758;
+  --color-rose-gold-dark: #8C4217;
+  --color-blush: #F1E7DB;
+  --color-ivory: #FAF7F2;
+  --color-sage: #8B9A7A;
+  --color-sage-light: #AAB99A;
+  --color-champagne: #F5ECDF;
+  --color-charcoal: #2A2622;
+  --color-warm-gray: #7A7268;
 
   --font-script: "Great Vibes", cursive;
   --font-serif: "Playfair Display", Georgia, serif;
@@ -74,13 +74,13 @@
 }
 
 :root {
-  --background: #111111;
-  --foreground: #F0E6DA;
+  --background: #FAF7F2;
+  --foreground: #2A2622;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #D4762C #171412;
+  scrollbar-color: #B8623A #F1E7DB;
 }
 
 html {
@@ -95,7 +95,7 @@ body {
 }
 
 ::selection {
-  background-color: #D4762C;
+  background-color: #B8623A;
   color: white;
 }
 
@@ -129,8 +129,8 @@ body {
 
 /* Pulse glow for countdown */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(212, 118, 44, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(212, 118, 44, 0.6); }
+  0%, 100% { box-shadow: 0 0 5px rgba(184, 98, 58, 0.2); }
+  50% { box-shadow: 0 0 16px rgba(184, 98, 58, 0.35); }
 }
 
 .pulse-glow {
@@ -155,10 +155,10 @@ body {
 
 /* Glassmorphism */
 .glass {
-  background: rgba(17, 17, 17, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 118, 44, 0.15);
+  background: rgba(250, 247, 242, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(42, 38, 34, 0.06);
 }
 
 /* Masonry grid */
@@ -189,42 +189,37 @@ body {
 .ornament::after {
   content: "";
   display: inline-block;
-  width: 60px;
+  width: 48px;
   height: 1px;
-  background: linear-gradient(to right, transparent, #D4762C, transparent);
+  background: rgba(42, 38, 34, 0.18);
   vertical-align: middle;
   margin: 0 1rem;
 }
 
-/* Glow text effect for hero names */
+/* Subtle text refinement for hero names (kept understated) */
 .glow-text {
-  text-shadow:
-    0 0 20px rgba(212, 118, 44, 0.3),
-    0 0 40px rgba(212, 118, 44, 0.15),
-    0 0 80px rgba(212, 118, 44, 0.08);
+  text-shadow: 0 1px 0 rgba(184, 98, 58, 0.04);
 }
 
-/* Gradient text */
+/* Gradient text — toned down to a refined single-color accent */
 .gradient-text {
-  background: linear-gradient(135deg, #D4762C, #E89A5A, #D4762C);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #B8623A;
 }
 
 /* Glass card */
 .glass-card {
-  background: rgba(17, 17, 17, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(212, 118, 44, 0.12);
-  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(42, 38, 34, 0.06);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(42, 38, 34, 0.04);
 }
 
 /* Section divider line */
 .section-divider {
   height: 1px;
-  width: 120px;
+  width: 80px;
   margin: 0 auto;
-  background: linear-gradient(to right, transparent, #D4762C, transparent);
+  background: rgba(42, 38, 34, 0.16);
 }

@@ -54,16 +54,16 @@ export function HeroSection() {
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
-          src="/images/hero/chrysanthemum-hero.jpg"
+          src="/images/hero/crisantemo.jpg"
           alt=""
           fill
-          className="object-cover opacity-30"
+          className="object-cover opacity-60"
           priority
         />
       </div>
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-ivory/80 via-ivory/60 to-ivory" />
+      {/* Gradient overlay — softens image without washing it out */}
+      <div className="absolute inset-0 bg-gradient-to-b from-ivory/70 via-ivory/55 to-ivory" />
 
       {/* Particle field */}
       <div className="absolute inset-0">
@@ -105,7 +105,7 @@ export function HeroSection() {
 
         <a
           href="#cerimonia"
-          className="hero-button inline-block mt-10 px-8 py-3 border border-rose-gold/40 text-rose-gold uppercase tracking-[0.2em] text-xs md:text-sm hover:bg-rose-gold/10 transition-colors rounded-sm"
+          className="hero-button inline-block mt-10 px-8 py-3 border border-rose-gold/50 text-rose-gold uppercase tracking-[0.2em] text-xs md:text-sm hover:bg-rose-gold hover:text-white transition-colors rounded-lg"
         >
           Detalhes
         </a>

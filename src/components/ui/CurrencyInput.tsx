@@ -67,13 +67,13 @@ export function CurrencyInput({
           onChange={handleChange}
           placeholder={placeholder}
           className={cn(
-            "w-full pl-12 pr-4 py-3 rounded-xl border transition-all duration-200",
-            "bg-champagne backdrop-blur-sm",
-            "focus:outline-none focus:ring-2 focus:ring-rose-gold/30 focus:border-rose-gold",
-            "placeholder:text-warm-gray/50 text-lg font-semibold",
+            "w-full pl-12 pr-4 py-3 rounded-lg border transition-all duration-200",
+            "bg-ivory text-charcoal",
+            "focus:outline-none focus:ring-2 focus:ring-rose-gold/25 focus:border-rose-gold",
+            "placeholder:text-warm-gray/60 text-lg font-semibold",
             error
               ? "border-red-400 focus:ring-red-300/30"
-              : "border-rose-gold/20 hover:border-rose-gold/40"
+              : "border-charcoal/10 hover:border-rose-gold/40"
           )}
         />
       </div>

@@ -39,13 +39,13 @@ export function PhoneInput({
         onChange={(e) => onChange(maskPhone(e.target.value))}
         placeholder="(31) 99999-9999"
         className={cn(
-          "w-full px-4 py-3 rounded-xl border transition-all duration-200",
-          "bg-champagne backdrop-blur-sm",
-          "focus:outline-none focus:ring-2 focus:ring-rose-gold/30 focus:border-rose-gold",
-          "placeholder:text-warm-gray/50",
+          "w-full px-4 py-3 rounded-lg border transition-all duration-200",
+          "bg-ivory text-charcoal",
+          "focus:outline-none focus:ring-2 focus:ring-rose-gold/25 focus:border-rose-gold",
+          "placeholder:text-warm-gray/60",
           error
             ? "border-red-400 focus:ring-red-300/30"
-            : "border-rose-gold/20 hover:border-rose-gold/40"
+            : "border-charcoal/10 hover:border-rose-gold/40"
         )}
       />
       {error && (

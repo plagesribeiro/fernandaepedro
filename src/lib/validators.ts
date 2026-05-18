@@ -2,6 +2,38 @@ import { z } from "zod";
 
 const fullNameRegex = /^\S+\s+\S+/;
 
+export const rsvpSearchSchema = z.object({
+  q: z.string().trim().min(2, "Digite pelo menos 2 letras").max(100),
+});
+
+export const rsvpSubmitSchema = z.object({
+  inviteGroupName: z.string().min(1).max(255),
+  confirmedBy: z
+    .string()
+    .trim()
+    .min(2, "Informe quem está confirmando")
+    .max(255),
+  responses: z
+    .array(
+      z.object({
+        guestSlotIndex: z.number().int().min(0).max(20),
+        status: z.enum(["Sim", "Nao"]),
+        nameFilled: z
+          .string()
+          .trim()
+          .max(255)
+          .optional()
+          .or(z.literal("")),
+      })
+    )
+    .min(1)
+    .max(20),
+});
+
+export type RsvpSearchInput = z.infer<typeof rsvpSearchSchema>;
+export type RsvpSubmitInput = z.infer<typeof rsvpSubmitSchema>;
+
+// Legacy: kept while old route is still around. New flow uses rsvpSubmitSchema.
 export const rsvpSchema = z
   .object({
     name: z

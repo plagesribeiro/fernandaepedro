@@ -8,6 +8,8 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 
+// Legacy: kept so `drizzle-kit push` doesn't drop preexisting rows.
+// New flow writes to `rsvp_responses` and treats the Google Sheet as source of truth.
 export const rsvpConfirmations = pgTable("rsvp_confirmations", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
@@ -28,6 +30,20 @@ export const rsvpGuests = pgTable("rsvp_guests", {
     .notNull(),
   guestName: varchar("guest_name", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const rsvpResponses = pgTable("rsvp_responses", {
+  id: serial("id").primaryKey(),
+  inviteGroupName: varchar("invite_group_name", { length: 255 }).notNull(),
+  guestSlotIndex: integer("guest_slot_index").notNull(),
+  guestOriginalName: varchar("guest_original_name", { length: 255 }),
+  status: varchar("status", { length: 10 }).notNull(),
+  nameFilled: varchar("name_filled", { length: 255 }),
+  confirmedBy: varchar("confirmed_by", { length: 255 }).notNull(),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
+  sheetRowIndex: integer("sheet_row_index").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const gifts = pgTable("gifts", {
@@ -57,4 +73,3 @@ export const pixPayments = pgTable("pix_payments", {
   paidAt: timestamp("paid_at"),
   createdAt: timestamp("created_at").defaultNow(),
 });
-

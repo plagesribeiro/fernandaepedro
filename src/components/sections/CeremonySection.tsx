@@ -2,15 +2,16 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { MapPin, Clock, Music, UtensilsCrossed, Church } from "lucide-react";
+import { MapPin, Music, UtensilsCrossed, Heart, GlassWater } from "lucide-react";
 import { registerGSAP, gsap } from "@/lib/gsap-config";
 import { useCountdown } from "@/hooks/useCountdown";
 import { WEDDING } from "@/lib/constants";
 
-const SCHEDULE_ICONS: Record<string, React.ReactNode> = {
-  "Cerimônia": <Church className="w-5 h-5" />,
-  "Recepção": <UtensilsCrossed className="w-5 h-5" />,
-  "Festa": <Music className="w-5 h-5" />,
+const HIGHLIGHT_ICONS: Record<string, React.ReactNode> = {
+  heart: <Heart className="w-4 h-4" />,
+  utensils: <UtensilsCrossed className="w-4 h-4" />,
+  glass: <GlassWater className="w-4 h-4" />,
+  music: <Music className="w-4 h-4" />,
 };
 
 function CompactCountdown() {
@@ -85,18 +86,18 @@ export function CeremonySection() {
     <section
       id="cerimonia"
       ref={sectionRef}
-      className="py-16 md:py-24 px-4"
+      className="pt-6 pb-16 md:pt-8 md:pb-24 px-4"
     >
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10 ceremony-animate">
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-4 bg-ivory">
             <Image
-              src="/images/hero/chrysanthemum-single.png"
-              alt=""
-              width={50}
-              height={50}
-              className="opacity-70"
+              src="/images/ozzy.png"
+              alt="Ozzy, o gatinho da Fernanda e do Pedro"
+              width={180}
+              height={180}
+              className="mix-blend-multiply"
             />
           </div>
           <h2 className="font-serif text-3xl md:text-4xl gradient-text mb-2">
@@ -110,19 +111,23 @@ export function CeremonySection() {
         <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-start">
           {/* Left: Map + location */}
           <div className="ceremony-animate order-2 md:order-1">
-            <div className="rounded-xl overflow-hidden border border-rose-gold/10">
-              <iframe
-                title="Localização da cerimônia"
-                src={`https://maps.google.com/maps?q=${mapsQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
-                className="w-full h-52 md:h-72"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${mapsQuery}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-xl overflow-hidden border border-rose-gold/10 group"
+            >
+              <Image
+                src="/images/Screenshot%202026-05-17%20at%2021.34.33.png"
+                alt="Mapa do local da cerimônia"
+                width={1200}
+                height={800}
+                className="w-full h-52 md:h-72 object-cover transition-transform duration-300 group-hover:scale-[1.02]"
               />
               <div className="glass-card rounded-t-none border-t-0 px-4 py-3 flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-rose-gold mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-sm font-medium text-charcoal group-hover:text-rose-gold transition-colors">
                     {WEDDING.venue.name}
                   </p>
                   <p className="text-xs text-warm-gray">
@@ -130,7 +135,7 @@ export function CeremonySection() {
                   </p>
                 </div>
               </div>
-            </div>
+            </a>
           </div>
 
           {/* Right: Countdown + Schedule timeline */}
@@ -140,37 +145,46 @@ export function CeremonySection() {
             </div>
 
             <div className="ceremony-animate">
-              <div className="relative">
-                {WEDDING.schedule.map((item, i) => (
-                  <div key={item.time} className="relative flex gap-4">
-                    {/* Timeline line */}
-                    {i < WEDDING.schedule.length - 1 && (
-                      <div className="absolute left-[19px] top-10 bottom-0 w-px bg-rose-gold/20" />
-                    )}
-
-                    {/* Icon circle */}
-                    <div className="shrink-0 w-10 h-10 rounded-full bg-rose-gold/10 border border-rose-gold/20 flex items-center justify-center text-rose-gold z-10">
-                      {SCHEDULE_ICONS[item.event] ?? <Clock className="w-5 h-5" />}
-                    </div>
-
-                    {/* Content */}
-                    <div className={i < WEDDING.schedule.length - 1 ? "pb-6" : ""}>
-                      <span className="text-rose-gold font-serif text-lg">
-                        {item.time}
+              <div className="glass-card rounded-xl px-5 py-5 text-center">
+                <div className="flex items-center justify-center gap-3">
+                  <span className="font-serif text-3xl md:text-4xl gradient-text">
+                    {WEDDING.celebration.start}
+                  </span>
+                  <span className="text-rose-gold/50 text-2xl">—</span>
+                  <span className="font-serif text-3xl md:text-4xl gradient-text">
+                    {WEDDING.celebration.end}
+                  </span>
+                </div>
+                <p className="text-warm-gray text-xs mt-2 italic">
+                  {WEDDING.celebration.tagline}
+                </p>
+                <div className="mt-4 flex items-center justify-center gap-3">
+                  <span className="h-px w-8 bg-rose-gold/25" />
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-rose-gold/80">
+                    O que te espera
+                  </span>
+                  <span className="h-px w-8 bg-rose-gold/25" />
+                </div>
+                <ul className="mt-3 grid grid-cols-2 gap-2 text-left">
+                  {WEDDING.celebration.highlights.map((h) => (
+                    <li
+                      key={h.label}
+                      className="flex items-center gap-2 rounded-lg border border-rose-gold/10 bg-rose-gold/5 px-3 py-2"
+                    >
+                      <span className="text-rose-gold shrink-0">
+                        {HIGHLIGHT_ICONS[h.icon]}
                       </span>
-                      <h3 className="font-serif text-lg text-ivory mt-0.5">
-                        {item.event}
-                      </h3>
-                      <p className="text-warm-gray text-sm leading-relaxed mt-1">
-                        {item.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                      <span className="text-xs text-charcoal leading-tight">
+                        {h.label}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </section>
   );
