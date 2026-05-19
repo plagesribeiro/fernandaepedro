@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Loader2 } from "lucide-react";
 import { AnimatedButton } from "./AnimatedButton";
 import { FormField } from "./FormField";
+import { PhoneInput } from "./PhoneInput";
 import { CurrencyInput } from "./CurrencyInput";
 import { PixPaymentStep } from "./PixPaymentStep";
 import { ConfettiOverlay } from "@/components/effects/ConfettiOverlay";
@@ -28,6 +29,7 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
   const [step, setStep] = useState<Step>("form");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [amount, setAmount] = useState(0);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,6 +56,7 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
     setStep("form");
     setName("");
     setEmail("");
+    setPhone("");
     setAmount(0);
     setMessage("");
     setError("");
@@ -81,6 +84,7 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
           type: "donation",
           reserverName: name,
           reserverEmail: email,
+          reserverPhone: phone,
           amount,
           message: message || undefined,
         }),
@@ -174,6 +178,12 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
                     }
                     required
                   />
+                  <PhoneInput
+                    id="donation-phone"
+                    label="Seu telefone"
+                    value={phone}
+                    onChange={setPhone}
+                  />
                   <CurrencyInput
                     id="donation-amount"
                     label="Valor da contribuição"
@@ -196,7 +206,13 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
 
                   <AnimatedButton
                     type="submit"
-                    disabled={loading || !name || !email || amount < 1}
+                    disabled={
+                      loading ||
+                      !name ||
+                      !email ||
+                      phone.replace(/\D/g, "").length < 10 ||
+                      amount < 1
+                    }
                     className="w-full"
                   >
                     {loading ? (

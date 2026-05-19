@@ -1,13 +1,10 @@
 export interface Gift {
-  id: number;
   name: string;
-  description: string | null;
+  description: string;
   imageUrl: string;
   price: number;
-  category: string | null;
-  totalQuantity: number;
-  availableQuantity: number;
-  createdAt: Date | null;
+  /** null = sem limite */
+  availableQuantity: number | null;
 }
 
 export interface RsvpFormData {
@@ -20,9 +17,10 @@ export interface RsvpFormData {
 }
 
 export interface GiftReserveData {
-  giftId: number;
+  giftName: string;
   reserverName: string;
   reserverEmail: string;
+  reserverPhone: string;
 }
 
 export interface ApiResponse<T = unknown> {
@@ -51,6 +49,7 @@ export interface PixPayment {
   reserverEmail: string;
   giftId: number | null;
   message: string | null;
+  giftImageUrl: string | null;
   pixCopiaECola: string | null;
   expiresAt: Date | null;
   paidAt: Date | null;
@@ -61,7 +60,8 @@ export interface PixCreateRequest {
   type: "gift" | "donation";
   reserverName: string;
   reserverEmail: string;
-  giftId?: number;
+  reserverPhone: string;
+  giftName?: string;
   amount?: number;
   message?: string;
 }

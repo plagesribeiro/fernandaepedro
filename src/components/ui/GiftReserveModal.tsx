@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Gift, Loader2, ArrowLeft } from "lucide-react";
 import { AnimatedButton } from "./AnimatedButton";
 import { FormField } from "./FormField";
+import { PhoneInput } from "./PhoneInput";
 import { PixPaymentStep } from "./PixPaymentStep";
 import { ConfettiOverlay } from "@/components/effects/ConfettiOverlay";
 import { usePixPolling } from "@/hooks/usePixPolling";
@@ -33,6 +34,7 @@ export function GiftReserveModal({
   const [step, setStep] = useState<Step>("form");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pixData, setPixData] = useState<PixCreateResponse | null>(null);
@@ -59,6 +61,7 @@ export function GiftReserveModal({
     setStep("form");
     setName("");
     setEmail("");
+    setPhone("");
     setError("");
     setPixData(null);
     setShowConfetti(false);
@@ -80,7 +83,8 @@ export function GiftReserveModal({
           type: "gift",
           reserverName: name,
           reserverEmail: email,
-          giftId: gift.id,
+          reserverPhone: phone,
+          giftName: gift.name,
         }),
       });
 
@@ -181,6 +185,12 @@ export function GiftReserveModal({
                     }
                     required
                   />
+                  <PhoneInput
+                    id="reserve-phone"
+                    label="Seu telefone"
+                    value={phone}
+                    onChange={setPhone}
+                  />
 
                   {error && (
                     <p className="text-sm text-red-500 text-center">{error}</p>
@@ -188,7 +198,9 @@ export function GiftReserveModal({
 
                   <AnimatedButton
                     type="submit"
-                    disabled={loading || !name || !email}
+                    disabled={
+                      loading || !name || !email || phone.replace(/\D/g, "").length < 10
+                    }
                     className="w-full"
                   >
                     {loading ? (

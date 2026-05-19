@@ -1,22 +1,18 @@
 "use client";
 
+import PhoneNumberInput, {
+  isValidPhoneNumber,
+} from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import { cn } from "@/lib/utils";
-import type { FieldError } from "react-hook-form";
 
 interface PhoneInputProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  error?: FieldError;
+  /** Mensagem de erro vinda do form (ex: react-hook-form). */
+  error?: string;
   id?: string;
-}
-
-function maskPhone(value: string): string {
-  const digits = value.replace(/\D/g, "").slice(0, 11);
-  if (digits.length <= 2) return `(${digits}`;
-  if (digits.length <= 7)
-    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 }
 
 export function PhoneInput({
@@ -26,31 +22,41 @@ export function PhoneInput({
   error,
   id,
 }: PhoneInputProps) {
+  // Valida só se o usuário já digitou algo. Com seletor de país, o valor é
+  // sempre E.164 (`+5531999999999`) ou undefined.
+  const showInvalid = !!value && !isValidPhoneNumber(value);
+  const errorText = error ?? (showInvalid ? "Número inválido" : null);
+
   return (
     <div className="space-y-1">
       <label htmlFor={id} className="block text-sm font-medium text-charcoal">
         {label}
       </label>
-      <input
-        id={id}
-        type="tel"
-        inputMode="numeric"
-        value={value}
-        onChange={(e) => onChange(maskPhone(e.target.value))}
-        placeholder="(31) 99999-9999"
+      <div
         className={cn(
-          "w-full px-4 py-3 rounded-lg border transition-all duration-200",
-          "bg-ivory text-charcoal",
-          "focus:outline-none focus:ring-2 focus:ring-rose-gold/25 focus:border-rose-gold",
-          "placeholder:text-warm-gray/60",
-          error
-            ? "border-red-400 focus:ring-red-300/30"
+          "fp-phone-input flex items-center rounded-lg border transition-all duration-200 bg-ivory",
+          "focus-within:outline-none focus-within:ring-2 focus-within:ring-rose-gold/25 focus-within:border-rose-gold",
+          errorText
+            ? "border-red-400 focus-within:ring-red-300/30"
             : "border-charcoal/10 hover:border-rose-gold/40"
         )}
-      />
-      {error && (
-        <p className="text-sm text-red-500 mt-1">{error.message}</p>
-      )}
+      >
+        <PhoneNumberInput
+          id={id}
+          international
+          defaultCountry="BR"
+          countryCallingCodeEditable={false}
+          value={value || undefined}
+          onChange={(v) => onChange(v ?? "")}
+          placeholder="(31) 99999-9999"
+          numberInputProps={{
+            className:
+              "flex-1 bg-transparent border-0 outline-none text-charcoal placeholder:text-warm-gray/60 px-2 py-3",
+            "aria-invalid": !!errorText,
+          }}
+        />
+      </div>
+      {errorText && <p className="text-sm text-red-500 mt-1">{errorText}</p>}
     </div>
   );
 }

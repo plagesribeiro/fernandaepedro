@@ -1,34 +1,27 @@
 import { neon } from "@neondatabase/serverless";
+import { fetchGiftSnapshot } from "@/lib/sheets/gifts-read";
 
 function getSql() {
   return neon(process.env.DATABASE_URL!);
 }
 
-/**
- * Checks if a gift is still available by counting approved payments.
- * Returns true if total_quantity > number of approved pix_payments for this gift.
- */
-export async function isGiftAvailable(giftId: number): Promise<boolean> {
-  const sql = getSql();
-  const result = await sql`
-    SELECT g.total_quantity - COALESCE(c.cnt, 0) AS available
-    FROM gifts g
-    LEFT JOIN (
-      SELECT gift_id, COUNT(*)::int AS cnt
-      FROM pix_payments
-      WHERE status = 'approved' AND gift_id = ${giftId}
-      GROUP BY gift_id
-    ) c ON c.gift_id = g.id
-    WHERE g.id = ${giftId}
-  `;
-  if (result.length === 0) return false;
-  return Number(result[0].available) > 0;
+export async function isGiftAvailable(giftName: string): Promise<boolean> {
+  const snapshot = await fetchGiftSnapshot();
+  const gift = snapshot.byName.get(giftName);
+  if (!gift) return false;
+  if (gift.availableQuantity === null) return true; // sem limite
+  return gift.availableQuantity > 0;
 }
 
-/**
- * Marks expired pending PIX payments as 'expired'.
- * Does NOT touch reserved_quantity — availability is derived from approved payments.
- */
+export async function getGift(
+  giftName: string
+): Promise<{ name: string; price: number; description: string } | null> {
+  const snapshot = await fetchGiftSnapshot();
+  const gift = snapshot.byName.get(giftName);
+  if (!gift) return null;
+  return { name: gift.name, price: gift.price, description: gift.description };
+}
+
 export async function cleanupExpiredPayments(): Promise<number> {
   const sql = getSql();
   const expired = await sql`
@@ -39,15 +32,4 @@ export async function cleanupExpiredPayments(): Promise<number> {
     RETURNING id
   `;
   return expired.length;
-}
-
-export async function getGiftPrice(
-  giftId: number
-): Promise<{ price: number; name: string } | null> {
-  const sql = getSql();
-  const result = await sql`
-    SELECT price, name FROM gifts WHERE id = ${giftId}
-  `;
-  if (result.length === 0) return null;
-  return { price: Number(result[0].price), name: result[0].name as string };
 }

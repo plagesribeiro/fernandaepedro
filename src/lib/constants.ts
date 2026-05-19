@@ -1,6 +1,7 @@
 export const WEDDING = {
   bride: "Fernanda",
   groom: "Pedro",
+  // -03:00 fixa o horário em BRT (Brasil não tem DST). Sem o offset, JS parsa como horário local do browser do visitante.
   date: new Date("2026-08-08T16:00:00-03:00"),
   dateDisplay: "08 · Agosto · 2026",
   venue: {

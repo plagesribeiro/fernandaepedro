@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { CartProvider } from "@/components/cart/CartContext";
+import { CartButton } from "@/components/cart/CartButton";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 
 export const metadata: Metadata = {
   title: "Fernanda & Pedro — 08.08.2026",
@@ -27,9 +30,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 export default function RootLayout({
@@ -40,7 +40,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="scroll-smooth">
       <body className="bg-ivory text-charcoal font-sans antialiased">
-        {children}
+        <CartProvider>
+          {children}
+          <CartButton />
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );
