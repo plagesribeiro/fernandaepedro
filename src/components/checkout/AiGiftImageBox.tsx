@@ -10,7 +10,7 @@ import {
   type DragEvent,
 } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import {
   AlertCircle,
   Check,
@@ -97,8 +97,13 @@ export function AiGiftImageBox({
   const [generationCount, setGenerationCount] = useState(0);
   const hydratedRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const warningTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  // Controla animação "shake" na caixa quando o convidado clica Gerar sem ter
+  // escrito nada nem anexado nada — feedback visual claro do que está faltando.
+  const boxShake = useAnimation();
+  const [contentMissingFlash, setContentMissingFlash] = useState(false);
 
   // Hidrata a partir do localStorage uma vez.
   useEffect(() => {
@@ -294,8 +299,16 @@ export function AiGiftImageBox({
     }
     if (contentEmpty) {
       showWarning(
-        "Descreva uma imagem no campo acima ou anexe pelo menos uma foto."
+        "Escreva uma descrição da imagem no campo acima ou anexe pelo menos uma foto do álbum."
       );
+      // Reforço visual: foca a textarea, sacode a caixa e pisca borda vermelha
+      textareaRef.current?.focus();
+      void boxShake.start({
+        x: [0, -6, 6, -4, 4, -2, 0],
+        transition: { duration: 0.4 },
+      });
+      setContentMissingFlash(true);
+      window.setTimeout(() => setContentMissingFlash(false), 1800);
       return;
     }
     // Se o convidado vai gerar sem nenhuma referência, mostra um lembrete
@@ -348,17 +361,18 @@ export function AiGiftImageBox({
     }
   }
 
+  // O botão NÃO fica disabled quando falta conteúdo — queremos que o clique
+  // dispare o feedback (shake + foco) em vez de não fazer nada.
   const generateDisabled =
-    disabled ||
-    status === "generating" ||
-    !formValid ||
-    (!prompt.trim() && attachments.length === 0);
+    disabled || status === "generating" || !formValid;
 
   const containerBorder = cn(
     "rounded-2xl bg-ivory border transition-colors p-4 space-y-3",
     dragDepth > 0
       ? "border-rose-gold border-dashed bg-rose-gold/5"
-      : "border-rose-gold/20 hover:border-rose-gold/40 focus-within:border-rose-gold focus-within:ring-2 focus-within:ring-rose-gold/15"
+      : contentMissingFlash
+        ? "border-red-400 ring-2 ring-red-300/40 bg-red-50/30"
+        : "border-rose-gold/20 hover:border-rose-gold/40 focus-within:border-rose-gold focus-within:ring-2 focus-within:ring-rose-gold/15"
   );
 
   return (
@@ -375,7 +389,8 @@ export function AiGiftImageBox({
         </p>
       </header>
 
-      <div
+      <motion.div
+        animate={boxShake}
         className={containerBorder}
         onPaste={handlePaste}
         onDragEnter={handleDragEnter}
@@ -413,6 +428,7 @@ export function AiGiftImageBox({
         )}
 
         <textarea
+          ref={textareaRef}
           rows={3}
           placeholder="Descreva uma imagem para os noivos... (opcional — pode também só anexar fotos)"
           value={prompt}
@@ -620,7 +636,7 @@ export function AiGiftImageBox({
             Solte aqui pra anexar
           </p>
         )}
-      </div>
+      </motion.div>
 
       <AnimatePresence>
         {status === "generating" && !generatedUrl && (
