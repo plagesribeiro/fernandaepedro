@@ -20,7 +20,7 @@ export const WEDDING = {
       { icon: "utensils", label: "Jantar" },
       { icon: "glass", label: "Open Bar"},
       { icon: "music", label: "Banda & DJ" },
-    ],
+    ] as { icon: string; label: string; detail?: string }[],
   },
   venueInfo: {
     dressCode: "Traje: esporte fino",
