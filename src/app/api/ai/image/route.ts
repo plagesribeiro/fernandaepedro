@@ -6,7 +6,7 @@ import path from "node:path";
 import { IMAGE_MODEL } from "@/lib/ai/models";
 import { buildImagePrompt } from "@/lib/ai/prompts";
 import { checkRateLimit, ipFromHeaders } from "@/lib/rate-limit";
-import { uploadGiftImage } from "@/lib/blob";
+import { uploadGiftImage, uploadInputImage } from "@/lib/blob";
 import { logAiGeneration } from "@/lib/ai/log";
 
 export const runtime = "nodejs";
@@ -158,6 +158,10 @@ export async function POST(req: NextRequest) {
   const attachmentsGallery =
     input.attachments?.filter((a) => a.kind === "galleryUrl").length ?? 0;
 
+  // Preenchido depois de resolver/persistir os anexos; o closure abaixo lê o
+  // valor corrente, então a falha também registra as imagens de input.
+  const inputImageRefs: Array<{ url: string; source: "gallery" | "device" }> = [];
+
   async function logFailure(message: string) {
     await logAiGeneration({
       kind: "image",
@@ -169,6 +173,7 @@ export async function POST(req: NextRequest) {
       attachmentsCount,
       attachmentsDataUrl,
       attachmentsGallery,
+      attachmentUrls: inputImageRefs,
       success: false,
       errorMessage: message,
     });
@@ -207,6 +212,27 @@ export async function POST(req: NextRequest) {
         },
         { status: 413 }
       );
+    }
+  }
+
+  // Persiste as imagens de input pra ficarem salvas junto do prompt/resultado.
+  // Uploads de dispositivo vão pro Blob; imagens da galeria guardam o caminho
+  // público estático (o arquivo já é persistente). Falha de upload não bloqueia
+  // a geração — só perde aquela referência no log.
+  const attachments = input.attachments ?? [];
+  for (let i = 0; i < attachments.length; i++) {
+    const att = attachments[i];
+    if (att.kind === "galleryUrl") {
+      inputImageRefs.push({ url: att.value, source: "gallery" });
+      continue;
+    }
+    const res = resolved[i];
+    if (!res) continue;
+    try {
+      const uploaded = await uploadInputImage(res.bytes, res.mediaType);
+      inputImageRefs.push({ url: uploaded.url, source: "device" });
+    } catch (err) {
+      console.error("[ai/image] input image upload failed:", err);
     }
   }
 
@@ -292,6 +318,7 @@ export async function POST(req: NextRequest) {
       attachmentsCount,
       attachmentsDataUrl,
       attachmentsGallery,
+      attachmentUrls: inputImageRefs,
       success: true,
     });
 

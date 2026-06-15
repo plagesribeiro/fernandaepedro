@@ -14,6 +14,7 @@ import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import {
   AlertCircle,
   Check,
+  ChevronDown,
   Download,
   ImageIcon,
   Loader2,
@@ -87,6 +88,9 @@ export function AiGiftImageBox({
   const [error, setError] = useState<string | null>(null);
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
   const [included, setIncluded] = useState<boolean>(true);
+  // A imagem é um extra: vem colapsada por padrão pra não pesar no checkout.
+  // Reabre sozinha se já existir uma imagem gerada nesta sessão (ver hidratação).
+  const [expanded, setExpanded] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [warning, setWarning] = useState<string | null>(null);
   const [dragDepth, setDragDepth] = useState(0);
@@ -114,6 +118,8 @@ export function AiGiftImageBox({
       if (saved.prompt) setPrompt(saved.prompt);
       if (saved.generatedUrl) setStatus("ready");
       setGenerationCount(saved.generationCount);
+      // Já gerou ou rascunhou algo antes — abre expandido pra mostrar o estado.
+      if (saved.generatedUrl || saved.prompt) setExpanded(true);
     }
     hydratedRef.current = true;
   }, []);
@@ -377,18 +383,35 @@ export function AiGiftImageBox({
 
   return (
     <section className="space-y-2">
-      <header className="space-y-0.5">
-        <h3 className="font-serif text-base text-charcoal flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-rose-gold" />
-          Adicione uma imagem para os noivos{" "}
-          <span className="text-warm-gray font-normal text-sm">(opcional)</span>
-        </h3>
-        <p className="text-xs text-warm-gray/80">
-          Use suas fotos, escolha do nosso álbum, ou descreva — a IA cria uma
-          arte que pode virar decoração da festa.
-        </p>
-      </header>
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        className="w-full flex items-start gap-2 text-left rounded-lg -mx-1 px-1 py-1 hover:bg-rose-gold/5 transition-colors"
+      >
+        <div className="flex-1 space-y-0.5">
+          <h3 className="font-serif text-base text-charcoal flex items-center gap-2 flex-wrap">
+            <Sparkles className="w-4 h-4 text-rose-gold" />
+            Adicione uma imagem para os noivos{" "}
+            <span className="text-warm-gray font-normal text-sm">
+              (opcional)
+            </span>
+          </h3>
+          <p className="text-xs text-warm-gray/80">
+            Use suas fotos, escolha do nosso álbum, ou descreva — a IA cria uma
+            arte que pode virar decoração da festa.
+          </p>
+        </div>
+        <ChevronDown
+          className={cn(
+            "w-5 h-5 text-rose-gold mt-0.5 shrink-0 transition-transform",
+            expanded && "rotate-180"
+          )}
+        />
+      </button>
 
+      {expanded && (
+      <>
       <motion.div
         animate={boxShake}
         className={containerBorder}
@@ -731,6 +754,8 @@ export function AiGiftImageBox({
           </p>
         )}
       </AnimatePresence>
+      </>
+      )}
 
       <AiGalleryPicker
         open={galleryOpen}

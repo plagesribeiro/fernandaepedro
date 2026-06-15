@@ -13,6 +13,8 @@ export interface AiGenerationLog {
   attachmentsCount?: number;
   attachmentsDataUrl?: number;
   attachmentsGallery?: number;
+  // URLs das imagens de input usadas no prompt: { url, source }.
+  attachmentUrls?: Array<{ url: string; source: "gallery" | "device" }> | null;
   success: boolean;
   errorMessage?: string | null;
 }
@@ -27,12 +29,16 @@ export async function logAiGeneration(entry: AiGenerationLog): Promise<void> {
     const trimmedResultText = entry.resultText
       ? entry.resultText.slice(0, 400)
       : null;
+    const attachmentUrlsJson =
+      entry.attachmentUrls && entry.attachmentUrls.length > 0
+        ? JSON.stringify(entry.attachmentUrls)
+        : null;
     await sql`
       INSERT INTO ai_generations (
         kind, reserver_name, reserver_email, reserver_phone,
         ip_address, prompt, hint, result_url, result_text,
         attachments_count, attachments_data_url, attachments_gallery,
-        success, error_message
+        attachment_urls, success, error_message
       ) VALUES (
         ${entry.kind},
         ${entry.reserverName},
@@ -46,6 +52,7 @@ export async function logAiGeneration(entry: AiGenerationLog): Promise<void> {
         ${entry.attachmentsCount ?? 0},
         ${entry.attachmentsDataUrl ?? 0},
         ${entry.attachmentsGallery ?? 0},
+        ${attachmentUrlsJson}::jsonb,
         ${entry.success},
         ${entry.errorMessage ?? null}
       )

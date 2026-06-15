@@ -1,5 +1,4 @@
 export const AI_IMAGE_STORAGE_KEY = "fp-checkout-ai-image-v1";
-export const AI_TIP_STORAGE_KEY = "fp-checkout-ai-tip-v1";
 
 export interface PersistedAiImage {
   generatedUrl: string | null;
@@ -10,12 +9,6 @@ export interface PersistedAiImage {
 }
 
 export const MAX_GENERATIONS_PER_CHECKOUT = 5;
-
-export interface PersistedTipState {
-  added: boolean;
-  dismissed: boolean;
-  addedAmount?: number;
-}
 
 function safeLoad<T>(key: string, isValid: (v: unknown) => v is T): T | null {
   if (typeof window === "undefined") return null;
@@ -63,12 +56,6 @@ function isPersistedAiImage(v: unknown): v is PersistedAiImage {
   );
 }
 
-function isPersistedTipState(v: unknown): v is PersistedTipState {
-  if (!v || typeof v !== "object") return false;
-  const o = v as Record<string, unknown>;
-  return typeof o.added === "boolean" && typeof o.dismissed === "boolean";
-}
-
 export function loadPersistedAiImage(): PersistedAiImage | null {
   const raw = safeLoad(AI_IMAGE_STORAGE_KEY, isPersistedAiImage);
   if (!raw) return null;
@@ -84,21 +71,4 @@ export function savePersistedAiImage(state: PersistedAiImage): void {
 
 export function clearPersistedAiImage(): void {
   safeRemove(AI_IMAGE_STORAGE_KEY);
-}
-
-export function loadTipState(): PersistedTipState {
-  return (
-    safeLoad(AI_TIP_STORAGE_KEY, isPersistedTipState) ?? {
-      added: false,
-      dismissed: false,
-    }
-  );
-}
-
-export function saveTipState(state: PersistedTipState): void {
-  safeSave(AI_TIP_STORAGE_KEY, state);
-}
-
-export function clearTipState(): void {
-  safeRemove(AI_TIP_STORAGE_KEY);
 }

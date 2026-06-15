@@ -36,7 +36,7 @@ export function DonationCard() {
       </div>
       <div className="p-2.5 sm:p-4 flex flex-col flex-1">
         <h3 className="font-serif text-base sm:text-lg text-charcoal leading-tight line-clamp-2">
-          Doação Personalizada
+          Presente Personalizado
         </h3>
         <p className="text-xs sm:text-sm text-warm-gray line-clamp-3 leading-snug mt-2">
           Contribua com o valor que desejar.
@@ -79,20 +79,20 @@ export function DonationCard() {
                 value={amount}
                 onChange={setAmount}
               />
-              <div className="flex gap-2">
+              <div className="flex flex-col-reverse sm:flex-row gap-2">
                 <button
                   type="button"
                   onClick={() => {
                     setExpanded(false);
                     setAmount(0);
                   }}
-                  className="px-3 py-2 rounded-lg border border-rose-gold/20 text-warm-gray hover:bg-rose-gold/5 transition-colors text-xs flex items-center gap-1"
+                  className="w-full sm:w-auto px-3 py-2 rounded-lg border border-rose-gold/20 text-warm-gray hover:bg-rose-gold/5 transition-colors text-xs flex items-center justify-center gap-1"
                 >
                   <X className="w-3.5 h-3.5" /> Cancelar
                 </button>
                 <AnimatedButton
                   size="sm"
-                  className="flex-1"
+                  className="w-full sm:flex-1"
                   disabled={amount < 1}
                   onClick={handleAdd}
                 >

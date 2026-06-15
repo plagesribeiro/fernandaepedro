@@ -154,7 +154,7 @@ export function AiMessageField({
       </label>
       <textarea
         id="ck-message"
-        rows={3}
+        rows={6}
         placeholder="Deixe um carinho..."
         value={value}
         readOnly={streaming || disabled}

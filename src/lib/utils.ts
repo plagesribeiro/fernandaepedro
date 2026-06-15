@@ -12,6 +12,22 @@ export function formatCurrency(value: number): string {
   }).format(value);
 }
 
+/**
+ * Taxa de serviço aplicada sobre o valor do presente no checkout.
+ * Mantida aqui pra que front e back-end calculem o mesmo número.
+ */
+export const CHECKOUT_FEE_RATE = 0.035;
+
+/** Taxa de 3,5% sobre o subtotal, arredondada pra centavos. */
+export function computeServiceFee(subtotal: number): number {
+  return Math.round(subtotal * CHECKOUT_FEE_RATE * 100) / 100;
+}
+
+/** Subtotal + taxa de serviço, arredondado pra centavos. */
+export function computeTotalWithFee(subtotal: number): number {
+  return Math.round((subtotal + computeServiceFee(subtotal)) * 100) / 100;
+}
+
 export function formatDateBR(date: Date): string {
   return new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",

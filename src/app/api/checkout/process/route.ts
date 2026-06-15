@@ -7,6 +7,7 @@ import {
   appendPaymentAudit,
   decrementGiftAvailability,
 } from "@/lib/sheets/gifts-write";
+import { computeTotalWithFee } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -109,8 +110,10 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Round to cents to avoid floating-point inconsistency
-  totalAmount = Math.round(totalAmount * 100) / 100;
+  // Round subtotal to cents, então soma a taxa de serviço de 3,5% sobre o
+  // valor do presente. O total cobrado = subtotal + taxa (mesmo cálculo do front).
+  const subtotal = Math.round(totalAmount * 100) / 100;
+  totalAmount = computeTotalWithFee(subtotal);
 
   const sql = neon(process.env.DATABASE_URL!);
   const description =

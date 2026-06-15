@@ -138,7 +138,7 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
                 <Heart className="w-6 h-6 text-rose-gold" />
               </div>
               <h3 className="font-serif text-xl text-charcoal">
-                Doação Personalizada
+                Presente Personalizado
               </h3>
               <p className="text-sm text-warm-gray mt-1">
                 Contribua com o valor que desejar
@@ -258,7 +258,7 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
                   className="text-center py-4"
                 >
                   <p className="text-warm-gray">
-                    Doação recebida com sucesso! Muito obrigado pela sua
+                    Presente recebido com sucesso! Muito obrigado pela sua
                     generosidade e carinho.
                   </p>
                 </motion.div>

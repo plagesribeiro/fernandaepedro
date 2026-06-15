@@ -17,9 +17,9 @@ export const WEDDING = {
     tagline: "Uma tarde e noite para guardar pra sempre",
     highlights: [
       { icon: "heart", label: "Cerimônia" },
-      { icon: "utensils", label: "Jantar completo" },
-      { icon: "glass", label: "Open bar a noite toda" },
-      { icon: "music", label: "DJ e pista de dança" },
+      { icon: "utensils", label: "Jantar" },
+      { icon: "glass", label: "Open Bar"},
+      { icon: "music", label: "Banda & DJ" },
     ],
   },
   venueInfo: {
@@ -86,6 +86,11 @@ export const WEDDING = {
     "/images/gallery/WhatsApp%20Image%202026-05-17%20at%2021.54.21%20%281%29.jpeg",
     "/images/gallery/WhatsApp%20Image%202026-05-17%20at%2021.54.21%20%282%29.jpeg",
     "/images/gallery/WhatsApp%20Image%202026-05-17%20at%2021.54.21%20%283%29.jpeg",
+    "/images/gallery/WhatsApp%20Image%202026-06-07%20at%2021.30.54.jpeg",
+    "/images/gallery/WhatsApp%20Image%202026-06-07%20at%2021.31.50.jpeg",
+    "/images/gallery/WhatsApp%20Image%202026-06-07%20at%2021.32.19.jpeg",
+    "/images/gallery/WhatsApp%20Image%202026-06-14%20at%2021.46.57.jpeg",
+    "/images/gallery/WhatsApp%20Image%202026-06-14%20at%2021.47.36.jpeg",
   ],
 } as const;
 

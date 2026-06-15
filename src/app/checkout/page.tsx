@@ -5,7 +5,6 @@ import {
   useMemo,
   useEffect,
   useRef,
-  useCallback,
   type ChangeEvent,
   type FormEvent,
 } from "react";
@@ -32,24 +31,24 @@ import { FormField } from "@/components/ui/FormField";
 import { PhoneInput } from "@/components/ui/PhoneInput";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { useCart } from "@/components/cart/CartContext";
-import { formatCurrency, cn, isUsableImage } from "@/lib/utils";
+import {
+  formatCurrency,
+  cn,
+  isUsableImage,
+  computeServiceFee,
+  computeTotalWithFee,
+  CHECKOUT_FEE_RATE,
+} from "@/lib/utils";
 import { WEDDING } from "@/lib/constants";
 import { CardPaymentBrick } from "@/components/checkout/CardPaymentBrick";
 import { PixCheckoutStep } from "@/components/checkout/PixCheckoutStep";
 import { CheckoutSuccess } from "@/components/checkout/CheckoutSuccess";
 import { AiMessageField } from "@/components/checkout/AiMessageField";
 import { AiGiftImageBox } from "@/components/checkout/AiGiftImageBox";
-import { AiTipBanner } from "@/components/checkout/AiTipBanner";
-import {
-  AI_IMAGE_STORAGE_KEY,
-  AI_TIP_STORAGE_KEY,
-  loadTipState,
-  saveTipState,
-  type PersistedTipState,
-} from "@/lib/ai-checkout-storage";
+import { AI_IMAGE_STORAGE_KEY } from "@/lib/ai-checkout-storage";
 
 type PaymentMethod = "card" | "pix";
-// Passo 1: dados do comprador. Passo 2: mensagem + imagem IA + doação extra. Passo 3: pagamento.
+// Passo 1: dados do comprador. Passo 2: mensagem + imagem IA. Passo 3: pagamento.
 type Step = "buyer" | "ai" | "pay" | "card_pending" | "success";
 
 const CHECKOUT_FORM_STORAGE_KEY = "fp-checkout-form-v1";
@@ -92,7 +91,10 @@ function normalizeStoredPhone(stored: string | undefined): string {
 }
 
 export default function CheckoutPage() {
-  const { items, total, itemCount, clear, addDonation } = useCart();
+  const { items, total, itemCount, clear } = useCart();
+  // Taxa de serviço de 3,5% sobre o valor do presente — somada ao total cobrado.
+  const serviceFee = useMemo(() => computeServiceFee(total), [total]);
+  const grandTotal = useMemo(() => computeTotalWithFee(total), [total]);
   const [step, setStep] = useState<Step>("buyer");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -105,13 +107,7 @@ export default function CheckoutPage() {
   // flag de "usou IA pelo menos uma vez" pra disparar o tip banner.
   const [aiImageUrl, setAiImageUrl] = useState<string | null>(null);
   const [aiBusy, setAiBusy] = useState(false);
-  const [usedAi, setUsedAi] = useState(false);
-  const [tipState, setTipState] = useState<PersistedTipState>({
-    added: false,
-    dismissed: false,
-  });
   const hydratedRef = useRef(false);
-  const tipHydratedRef = useRef(false);
 
   // Restore form state from localStorage on first mount (survives refresh)
   useEffect(() => {
@@ -124,16 +120,6 @@ export default function CheckoutPage() {
     }
     if (saved.message) setMessage(saved.message);
     hydratedRef.current = true;
-  }, []);
-
-  // Hydrate tip state separately so it survives reloads too.
-  useEffect(() => {
-    const saved = loadTipState();
-    setTipState(saved);
-    // Se já tinha sido adicionado/dispensado antes, considera "usedAi" pra
-    // manter o banner visível (já que o usuário interagiu com IA antes).
-    if (saved.added || saved.dismissed) setUsedAi(true);
-    tipHydratedRef.current = true;
   }, []);
 
   // Persist form state on any change after hydration
@@ -149,40 +135,17 @@ export default function CheckoutPage() {
     }
   }, [name, email, phone, message]);
 
-  // Persist tip state on changes.
-  useEffect(() => {
-    if (!tipHydratedRef.current) return;
-    saveTipState(tipState);
-  }, [tipState]);
-
   // Wipe stored state once the purchase succeeds.
   useEffect(() => {
     if (step === "success") {
       try {
         window.localStorage.removeItem(CHECKOUT_FORM_STORAGE_KEY);
         window.localStorage.removeItem(AI_IMAGE_STORAGE_KEY);
-        window.localStorage.removeItem(AI_TIP_STORAGE_KEY);
       } catch {
         // ignore
       }
     }
   }, [step]);
-
-  const handleTipAdd = useCallback(
-    (amount: number) => {
-      addDonation(amount);
-      setTipState({ added: true, dismissed: false, addedAmount: amount });
-    },
-    [addDonation]
-  );
-
-  const handleTipDismiss = useCallback(() => {
-    setTipState((prev) => ({ ...prev, dismissed: true }));
-  }, []);
-
-  const handleAiUsed = useCallback(() => {
-    setUsedAi(true);
-  }, []);
 
   // libphonenumber-js (via react-phone-number-input) valida com regras E.164 + país.
   const validPhone = !!phone && isValidPhoneNumber(phone);
@@ -313,14 +276,7 @@ export default function CheckoutPage() {
                 aiImageUrl={aiImageUrl}
                 onAiImageReady={setAiImageUrl}
                 onAiBusyChange={setAiBusy}
-                onAiUsed={handleAiUsed}
                 aiBusy={aiBusy}
-                showTipBanner={usedAi && !tipState.dismissed}
-                tipAddedAmount={
-                  tipState.added ? tipState.addedAmount ?? null : null
-                }
-                onTipAdd={handleTipAdd}
-                onTipDismiss={handleTipDismiss}
               />
 
               <AnimatePresence>
@@ -331,11 +287,17 @@ export default function CheckoutPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-champagne rounded-2xl p-6 border border-rose-gold/10 shadow-sm space-y-5"
+                    className="bg-champagne rounded-2xl p-4 sm:p-6 border border-rose-gold/10 shadow-sm space-y-5"
                   >
                     <h2 className="font-serif text-lg text-charcoal">
                       Como você quer pagar?
                     </h2>
+
+                    <FeeBreakdown
+                      subtotal={total}
+                      fee={serviceFee}
+                      total={grandTotal}
+                    />
 
                     <PaymentTabs
                       value={paymentMethod}
@@ -352,7 +314,7 @@ export default function CheckoutPage() {
 
                     {paymentMethod === "card" ? (
                       <CardPaymentBrick
-                        amount={total}
+                        amount={grandTotal}
                         payerEmail={email.trim()}
                         buildPayload={(formData) => ({
                           paymentMethod: "card",
@@ -375,7 +337,7 @@ export default function CheckoutPage() {
                         reserverPhone={phone.trim()}
                         message={message.trim() || undefined}
                         giftImageUrl={aiImageUrl ?? undefined}
-                        amount={total}
+                        amount={grandTotal}
                         onApproved={handleApprovedPix}
                       />
                     )}
@@ -540,7 +502,7 @@ function BuyerSection({
   return (
     <form
       onSubmit={onContinue}
-      className="bg-champagne rounded-2xl p-6 border border-rose-gold/10 shadow-sm space-y-4"
+      className="bg-champagne rounded-2xl p-4 sm:p-6 border border-rose-gold/10 shadow-sm space-y-4"
     >
       <h2 className="font-serif text-lg text-charcoal">Seus dados</h2>
 
@@ -599,12 +561,7 @@ function AiSection({
   aiImageUrl,
   onAiImageReady,
   onAiBusyChange,
-  onAiUsed,
   aiBusy,
-  showTipBanner,
-  tipAddedAmount,
-  onTipAdd,
-  onTipDismiss,
 }: {
   visible: boolean;
   editable: boolean;
@@ -620,13 +577,9 @@ function AiSection({
   aiImageUrl: string | null;
   onAiImageReady: (url: string | null) => void;
   onAiBusyChange: (busy: boolean) => void;
-  onAiUsed: () => void;
   aiBusy: boolean;
-  showTipBanner: boolean;
-  tipAddedAmount: number | null;
-  onTipAdd: (amount: number) => void;
-  onTipDismiss: () => void;
 }) {
+  const noop = () => {};
   if (!visible) return null;
 
   if (!editable) {
@@ -669,7 +622,7 @@ function AiSection({
   return (
     <form
       onSubmit={onContinue}
-      className="bg-champagne rounded-2xl p-6 border border-rose-gold/10 shadow-sm space-y-4"
+      className="bg-champagne rounded-2xl p-4 sm:p-6 border border-rose-gold/10 shadow-sm space-y-4"
     >
       <div className="space-y-0.5">
         <h2 className="font-serif text-lg text-charcoal flex items-center gap-2">
@@ -691,26 +644,19 @@ function AiSection({
         formValid={formValid}
         maxLength={500}
         disabled={!editable}
-        onAiUsed={onAiUsed}
+        onAiUsed={noop}
       />
 
       <AiGiftImageBox
         onImageReady={onAiImageReady}
         onBusyChange={onAiBusyChange}
-        onAiUsed={onAiUsed}
+        onAiUsed={noop}
         galleryImages={WEDDING.gallery}
         name={name}
         email={email}
         phone={phone}
         formValid={formValid}
         disabled={!editable}
-      />
-
-      <AiTipBanner
-        show={showTipBanner}
-        addedAmount={tipAddedAmount}
-        onAdd={onTipAdd}
-        onDismiss={onTipDismiss}
       />
 
       <AnimatedButton
@@ -792,6 +738,38 @@ function Tab({
   );
 }
 
+function FeeBreakdown({
+  subtotal,
+  fee,
+  total,
+}: {
+  subtotal: number;
+  fee: number;
+  total: number;
+}) {
+  const feePct = (CHECKOUT_FEE_RATE * 100).toLocaleString("pt-BR", {
+    maximumFractionDigits: 1,
+  });
+  return (
+    <div className="rounded-xl border border-rose-gold/15 bg-ivory/60 p-3 space-y-1.5 text-sm">
+      <div className="flex items-center justify-between text-warm-gray">
+        <span>Presentes</span>
+        <span className="tabular-nums">{formatCurrency(subtotal)}</span>
+      </div>
+      <div className="flex items-center justify-between text-warm-gray">
+        <span>Taxa de serviço ({feePct}%)</span>
+        <span className="tabular-nums">{formatCurrency(fee)}</span>
+      </div>
+      <div className="flex items-center justify-between pt-1.5 border-t border-rose-gold/10">
+        <span className="font-medium text-charcoal">Total a pagar</span>
+        <span className="font-serif text-lg text-rose-gold tabular-nums">
+          {formatCurrency(total)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function CartAside({
   items,
   total,
@@ -799,6 +777,11 @@ function CartAside({
   items: ReturnType<typeof useCart>["items"];
   total: number;
 }) {
+  const fee = computeServiceFee(total);
+  const grandTotal = computeTotalWithFee(total);
+  const feePct = (CHECKOUT_FEE_RATE * 100).toLocaleString("pt-BR", {
+    maximumFractionDigits: 1,
+  });
   return (
     <motion.aside
       initial={{ opacity: 0, y: 20 }}
@@ -831,7 +814,7 @@ function CartAside({
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-charcoal truncate">
-                  {isGift ? it.giftName : "Doação Personalizada"}
+                  {isGift ? it.giftName : "Presente Personalizado"}
                 </p>
                 <p className="text-xs text-warm-gray">
                   {isGift && it.quantity > 1
@@ -846,11 +829,21 @@ function CartAside({
           );
         })}
       </ul>
-      <div className="flex items-center justify-between mt-4 pt-4 border-t border-rose-gold/10">
-        <span className="text-sm text-warm-gray">Total</span>
-        <span className="text-xl font-serif text-rose-gold tabular-nums">
-          {formatCurrency(total)}
-        </span>
+      <div className="mt-4 pt-4 border-t border-rose-gold/10 space-y-1.5">
+        <div className="flex items-center justify-between text-sm text-warm-gray">
+          <span>Subtotal</span>
+          <span className="tabular-nums">{formatCurrency(total)}</span>
+        </div>
+        <div className="flex items-center justify-between text-sm text-warm-gray">
+          <span>Taxa de serviço ({feePct}%)</span>
+          <span className="tabular-nums">{formatCurrency(fee)}</span>
+        </div>
+        <div className="flex items-center justify-between pt-1.5">
+          <span className="text-sm font-medium text-charcoal">Total</span>
+          <span className="text-xl font-serif text-rose-gold tabular-nums">
+            {formatCurrency(grandTotal)}
+          </span>
+        </div>
       </div>
     </motion.aside>
   );

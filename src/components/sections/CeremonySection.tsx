@@ -174,8 +174,13 @@ export function CeremonySection() {
                       <span className="text-rose-gold shrink-0">
                         {HIGHLIGHT_ICONS[h.icon]}
                       </span>
-                      <span className="text-xs text-charcoal leading-tight">
-                        {h.label}
+                      <span className="flex flex-col leading-tight">
+                        <span className="text-xs text-charcoal">{h.label}</span>
+                        {"detail" in h && h.detail && (
+                          <span className="text-[10px] text-warm-gray">
+                            {h.detail}
+                          </span>
+                        )}
                       </span>
                     </li>
                   ))}

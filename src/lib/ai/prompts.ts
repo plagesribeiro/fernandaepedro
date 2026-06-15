@@ -103,6 +103,9 @@ export function buildImagePrompt(input: {
   lines.push(
     "- Evite: stock photo aesthetics, watermarks, texto sobreposto (exceto se pedido), neon harsh, clichês de casamento genéricos."
   );
+  lines.push(
+    "- Assinatura discreta obrigatória: inclua o texto \"uaimedia.app\" em letras pequenas e sutis em um dos cantos inferiores da imagem (tipografia simples, baixa opacidade ou cor que harmonize com a cena, sem fundo nem moldura). Deve ser legível de perto, mas sem competir com o assunto principal nem invadir a composição. É a única exceção à regra de \"sem texto sobreposto\" acima."
+  );
 
   if (!hasPrompt && !hasRefs) {
     lines.push("");

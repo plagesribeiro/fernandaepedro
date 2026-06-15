@@ -82,6 +82,10 @@ export const aiGenerations = pgTable("ai_generations", {
   // Quantos eram dataUrl (device/paste) vs galleryUrl.
   attachmentsDataUrl: integer("attachments_data_url").default(0),
   attachmentsGallery: integer("attachments_gallery").default(0),
+  // URLs das imagens de input usadas no prompt. Array de { url, source }.
+  // Uploads de dispositivo viram blob (gift-input-images/...); imagens da
+  // galeria guardam o caminho público estático.
+  attachmentUrls: jsonb("attachment_urls"),
   success: boolean("success").notNull(),
   errorMessage: text("error_message"),
   createdAt: timestamp("created_at").defaultNow(),
